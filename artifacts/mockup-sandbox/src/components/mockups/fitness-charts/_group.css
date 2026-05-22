@@ -1,0 +1,28 @@
+:root {
+  --fc-bg: #0A0B10;
+  --fc-surface: #13141C;
+  --fc-text-primary: #F8FAFC;
+  --fc-text-secondary: #8E96A6;
+  --fc-border: #1C1E26;
+  
+  --fc-chart-1: #2E5BFF;
+  --fc-chart-2: #4F8BFF;
+  --fc-chart-3: #2DD4BF;
+  --fc-chart-4: #7FE7D7;
+  --fc-chart-5: #FF6B6B;
+}
+
+.fc-tooltip {
+  background-color: var(--fc-surface) !important;
+  border: 1px solid var(--fc-border) !important;
+  border-radius: 0.5rem;
+  color: var(--fc-text-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.fc-tooltip-label {
+  color: var(--fc-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
