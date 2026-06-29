@@ -3,13 +3,24 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: PhD Application Tracker API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: applications
+    description: PhD application management
+  - name: documents
+    description: Document checklist management
+  - name: outreach
+    description: Professor/supervisor outreach tracking
+  - name: reminders
+    description: Deadline and follow-up reminders
+  - name: analytics
+    description: Pipeline analytics and conversion metrics
+
 paths:
   /healthz:
     get:
@@ -24,13 +35,1011 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Applications ──────────────────────────────────────────────────────────
+  /applications:
+    get:
+      operationId: listApplications
+      tags: [applications]
+      summary: List all applications
+      parameters:
+        - name: stage
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: country
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: field
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+    post:
+      operationId: createApplication
+      tags: [applications]
+      summary: Create a new application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Created application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}:
+    get:
+      operationId: getApplication
+      tags: [applications]
+      summary: Get a single application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Application details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateApplication
+      tags: [applications]
+      summary: Update an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationUpdate"
+      responses:
+        "200":
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteApplication
+      tags: [applications]
+      summary: Delete an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Documents ─────────────────────────────────────────────────────────────
+  /applications/{applicationId}/documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: List documents for an application
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+    post:
+      operationId: createDocument
+      tags: [documents]
+      summary: Add a document to an application
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentInput"
+      responses:
+        "201":
+          description: Created document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /applications/{applicationId}/documents/{id}:
+    patch:
+      operationId: updateDocument
+      tags: [documents]
+      summary: Update a document entry
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentUpdate"
+      responses:
+        "200":
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteDocument
+      tags: [documents]
+      summary: Delete a document entry
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Outreach ───────────────────────────────────────────────────────────────
+  /outreach:
+    get:
+      operationId: listOutreach
+      tags: [outreach]
+      summary: List all outreach contacts
+      parameters:
+        - name: applicationId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of outreach entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Outreach"
+    post:
+      operationId: createOutreach
+      tags: [outreach]
+      summary: Log a new outreach contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OutreachInput"
+      responses:
+        "201":
+          description: Created outreach entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Outreach"
+
+  /outreach/{id}:
+    get:
+      operationId: getOutreach
+      tags: [outreach]
+      summary: Get outreach details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Outreach details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Outreach"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateOutreach
+      tags: [outreach]
+      summary: Update an outreach entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OutreachUpdate"
+      responses:
+        "200":
+          description: Updated outreach
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Outreach"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteOutreach
+      tags: [outreach]
+      summary: Delete an outreach entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Reminders ──────────────────────────────────────────────────────────────
+  /reminders:
+    get:
+      operationId: listReminders
+      tags: [reminders]
+      summary: List reminders
+      parameters:
+        - name: applicationId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reminder"
+    post:
+      operationId: createReminder
+      tags: [reminders]
+      summary: Create a reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderInput"
+      responses:
+        "201":
+          description: Created reminder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reminder"
+
+  /reminders/{id}:
+    patch:
+      operationId: updateReminder
+      tags: [reminders]
+      summary: Update a reminder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderUpdate"
+      responses:
+        "200":
+          description: Updated reminder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reminder"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteReminder
+      tags: [reminders]
+      summary: Delete a reminder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Analytics ──────────────────────────────────────────────────────────────
+  /analytics/summary:
+    get:
+      operationId: getAnalyticsSummary
+      tags: [analytics]
+      summary: Get pipeline analytics summary
+      responses:
+        "200":
+          description: Analytics summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+
+  /analytics/by-country:
+    get:
+      operationId: getAnalyticsByCountry
+      tags: [analytics]
+      summary: Application counts grouped by country
+      responses:
+        "200":
+          description: Country breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CountryBreakdown"
+
+  /analytics/by-stage:
+    get:
+      operationId: getAnalyticsByStage
+      tags: [analytics]
+      summary: Application counts grouped by stage
+      responses:
+        "200":
+          description: Stage breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageBreakdown"
+
+  /analytics/upcoming-deadlines:
+    get:
+      operationId: getUpcomingDeadlines
+      tags: [analytics]
+      summary: Applications with deadlines in the next 30 days
+      responses:
+        "200":
+          description: Upcoming deadlines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    # ─── Application ─────────────────────────────────────────────────────────
+    Application:
+      type: object
+      required:
+        - id
+        - university
+        - country
+        - stage
+        - createdAt
+      properties:
+        id:
+          type: integer
+        university:
+          type: string
+        country:
+          type: string
+        program:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        projectTitle:
+          type: ["string", "null"]
+        supervisorName:
+          type: ["string", "null"]
+        fundingSource:
+          type: ["string", "null"]
+        portalLink:
+          type: ["string", "null"]
+        fieldArea:
+          type: ["string", "null"]
+        stage:
+          type: string
+        dateSourced:
+          type: ["string", "null"]
+        deadline:
+          type: ["string", "null"]
+        dateApplied:
+          type: ["string", "null"]
+        interviewDate:
+          type: ["string", "null"]
+        outcomeDate:
+          type: ["string", "null"]
+        offerStatus:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        priorityScore:
+          type: ["integer", "null"]
+        fitScore:
+          type: ["integer", "null"]
+        statusReason:
+          type: ["string", "null"]
+        nextAction:
+          type: ["string", "null"]
+        nextActionDate:
+          type: ["string", "null"]
+        researchFitReason:
+          type: ["string", "null"]
+        supervisorFitReason:
+          type: ["string", "null"]
+        papersToRead:
+          type: ["string", "null"]
+        skillsMatch:
+          type: ["string", "null"]
+        missingRequirements:
+          type: ["string", "null"]
+        risks:
+          type: ["string", "null"]
+        outreachAngle:
+          type: ["string", "null"]
+        isUrgent:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ApplicationInput:
+      type: object
+      required: [university, country]
+      properties:
+        university:
+          type: string
+          minLength: 1
+        country:
+          type: string
+          minLength: 1
+        program:
+          type: string
+        department:
+          type: string
+        projectTitle:
+          type: string
+        supervisorName:
+          type: string
+        fundingSource:
+          type: string
+        portalLink:
+          type: string
+        fieldArea:
+          type: string
+        stage:
+          type: string
+        dateSourced:
+          type: string
+        deadline:
+          type: string
+        dateApplied:
+          type: string
+        interviewDate:
+          type: string
+        outcomeDate:
+          type: string
+        offerStatus:
+          type: string
+        notes:
+          type: string
+        priorityScore:
+          type: integer
+        fitScore:
+          type: integer
+        statusReason:
+          type: string
+        nextAction:
+          type: string
+        nextActionDate:
+          type: string
+        researchFitReason:
+          type: string
+        supervisorFitReason:
+          type: string
+        papersToRead:
+          type: string
+        skillsMatch:
+          type: string
+        missingRequirements:
+          type: string
+        risks:
+          type: string
+        outreachAngle:
+          type: string
+
+    ApplicationUpdate:
+      type: object
+      properties:
+        university:
+          type: string
+        country:
+          type: string
+        program:
+          type: string
+        department:
+          type: string
+        projectTitle:
+          type: string
+        supervisorName:
+          type: string
+        fundingSource:
+          type: string
+        portalLink:
+          type: string
+        fieldArea:
+          type: string
+        stage:
+          type: string
+        dateSourced:
+          type: string
+        deadline:
+          type: string
+        dateApplied:
+          type: string
+        interviewDate:
+          type: string
+        outcomeDate:
+          type: string
+        offerStatus:
+          type: string
+        notes:
+          type: string
+        priorityScore:
+          type: integer
+        fitScore:
+          type: integer
+        statusReason:
+          type: string
+        nextAction:
+          type: string
+        nextActionDate:
+          type: string
+        researchFitReason:
+          type: string
+        supervisorFitReason:
+          type: string
+        papersToRead:
+          type: string
+        skillsMatch:
+          type: string
+        missingRequirements:
+          type: string
+        risks:
+          type: string
+        outreachAngle:
+          type: string
+        isUrgent:
+          type: boolean
+
+    # ─── Document ─────────────────────────────────────────────────────────────
+    Document:
+      type: object
+      required: [id, applicationId, docType, createdAt]
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        docType:
+          type: string
+        isRequired:
+          type: boolean
+        isUploaded:
+          type: boolean
+        isVerified:
+          type: boolean
+        isSent:
+          type: boolean
+        sentDate:
+          type: ["string", "null"]
+        versionNumber:
+          type: ["integer", "null"]
+        fileName:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    DocumentInput:
+      type: object
+      required: [docType]
+      properties:
+        docType:
+          type: string
+          minLength: 1
+        isRequired:
+          type: boolean
+        isUploaded:
+          type: boolean
+        isVerified:
+          type: boolean
+        isSent:
+          type: boolean
+        sentDate:
+          type: string
+        versionNumber:
+          type: integer
+        fileName:
+          type: string
+        notes:
+          type: string
+
+    DocumentUpdate:
+      type: object
+      properties:
+        docType:
+          type: string
+        isRequired:
+          type: boolean
+        isUploaded:
+          type: boolean
+        isVerified:
+          type: boolean
+        isSent:
+          type: boolean
+        sentDate:
+          type: string
+        versionNumber:
+          type: integer
+        fileName:
+          type: string
+        notes:
+          type: string
+
+    # ─── Outreach ─────────────────────────────────────────────────────────────
+    Outreach:
+      type: object
+      required: [id, professorName, createdAt]
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: ["integer", "null"]
+        professorName:
+          type: string
+        institution:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        dateContacted:
+          type: ["string", "null"]
+        subjectLine:
+          type: ["string", "null"]
+        messageSummary:
+          type: ["string", "null"]
+        threadStatus:
+          type: ["string", "null"]
+        followUpCount:
+          type: ["integer", "null"]
+        lastFollowUpDate:
+          type: ["string", "null"]
+        nextFollowUpDate:
+          type: ["string", "null"]
+        responseReceived:
+          type: boolean
+        responseSummary:
+          type: ["string", "null"]
+        outcome:
+          type: ["string", "null"]
+        toneQuality:
+          type: ["string", "null"]
+        attachmentsSent:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    OutreachInput:
+      type: object
+      required: [professorName]
+      properties:
+        applicationId:
+          type: integer
+        professorName:
+          type: string
+          minLength: 1
+        institution:
+          type: string
+        email:
+          type: string
+        dateContacted:
+          type: string
+        subjectLine:
+          type: string
+        messageSummary:
+          type: string
+        threadStatus:
+          type: string
+        followUpCount:
+          type: integer
+        lastFollowUpDate:
+          type: string
+        nextFollowUpDate:
+          type: string
+        responseReceived:
+          type: boolean
+        responseSummary:
+          type: string
+        outcome:
+          type: string
+        toneQuality:
+          type: string
+        attachmentsSent:
+          type: string
+
+    OutreachUpdate:
+      type: object
+      properties:
+        applicationId:
+          type: integer
+        professorName:
+          type: string
+        institution:
+          type: string
+        email:
+          type: string
+        dateContacted:
+          type: string
+        subjectLine:
+          type: string
+        messageSummary:
+          type: string
+        threadStatus:
+          type: string
+        followUpCount:
+          type: integer
+        lastFollowUpDate:
+          type: string
+        nextFollowUpDate:
+          type: string
+        responseReceived:
+          type: boolean
+        responseSummary:
+          type: string
+        outcome:
+          type: string
+        toneQuality:
+          type: string
+        attachmentsSent:
+          type: string
+
+    # ─── Reminder ─────────────────────────────────────────────────────────────
+    Reminder:
+      type: object
+      required: [id, reminderType, dueDate, createdAt]
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: ["integer", "null"]
+        outreachId:
+          type: ["integer", "null"]
+        reminderType:
+          type: string
+        dueDate:
+          type: string
+        priority:
+          type: ["string", "null"]
+        deliveryChannel:
+          type: ["string", "null"]
+        status:
+          type: string
+        isSnoozed:
+          type: boolean
+        isCompleted:
+          type: boolean
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ReminderInput:
+      type: object
+      required: [reminderType, dueDate]
+      properties:
+        applicationId:
+          type: integer
+        outreachId:
+          type: integer
+        reminderType:
+          type: string
+          minLength: 1
+        dueDate:
+          type: string
+        priority:
+          type: string
+        deliveryChannel:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
+    ReminderUpdate:
+      type: object
+      properties:
+        reminderType:
+          type: string
+        dueDate:
+          type: string
+        priority:
+          type: string
+        deliveryChannel:
+          type: string
+        status:
+          type: string
+        isSnoozed:
+          type: boolean
+        isCompleted:
+          type: boolean
+        notes:
+          type: string
+
+    # ─── Analytics ────────────────────────────────────────────────────────────
+    AnalyticsSummary:
+      type: object
+      required:
+        - totalApplications
+        - byStage
+        - conversionRates
+        - urgentCount
+        - deadlineIn7Days
+        - deadlineIn14Days
+        - deadlineIn30Days
+        - outreachResponseRate
+        - documentCompletionRate
+      properties:
+        totalApplications:
+          type: integer
+        byStage:
+          type: object
+          additionalProperties:
+            type: integer
+        conversionRates:
+          $ref: "#/components/schemas/ConversionRates"
+        urgentCount:
+          type: integer
+        deadlineIn7Days:
+          type: integer
+        deadlineIn14Days:
+          type: integer
+        deadlineIn30Days:
+          type: integer
+        outreachResponseRate:
+          type: number
+        documentCompletionRate:
+          type: number
+        interviewCount:
+          type: integer
+        offerCount:
+          type: integer
+        acceptedCount:
+          type: integer
+        rejectedCount:
+          type: integer
+
+    ConversionRates:
+      type: object
+      properties:
+        sourcedToApplied:
+          type: number
+        appliedToInterview:
+          type: number
+        interviewToOffer:
+          type: number
+        offerToAccepted:
+          type: number
+
+    CountryBreakdown:
+      type: object
+      required: [country, count]
+      properties:
+        country:
+          type: string
+        count:
+          type: integer
+        applied:
+          type: integer
+        interviews:
+          type: integer
+        offers:
+          type: integer
+
+    StageBreakdown:
+      type: object
+      required: [stage, count]
+      properties:
+        stage:
+          type: string
+        count:
+          type: integer
