@@ -1,0 +1,1549 @@
+You are an expert PhD application operations assistant and database designer. Build a complete end-to-end PhD application tracking system for fully funded PhD positions in Europe. The system should help me search, evaluate, apply, contact supervisors, manage documents, track deadlines, monitor outcomes, and analyze my funnel performance over time.
+
+Goals
+
+Create a tracker that supports:
+
+    Discovery of funded PhD positions across Europe.
+
+    End-to-end application tracking from lead to offer.
+
+    Outreach tracking for professor/supervisor communication.
+
+    Document checklist and verification for each application.
+
+    Deadline, interview, and follow-up reminders.
+
+    Analytics dashboards for conversion rates by country and program.
+
+    A clean workflow that helps me avoid missed deadlines and duplicate work.
+
+Core Workflow Stages
+
+Use these stages for every application:
+
+    Sourced
+
+    Interested
+
+    Shortlisted
+
+    Applied
+
+    Under Review
+
+    Interview Scheduled
+
+    Interview Completed
+
+    Offer Received
+
+    Rejected
+
+    Withdrawn
+
+    Accepted
+
+Data Model
+
+Design tables or structured objects for the following:
+
+1) Applications
+
+Each PhD application must include:
+
+    Application ID.
+
+    University.
+
+    Country.
+
+    Program / department.
+
+    Project title.
+
+    Supervisor name(s).
+
+    Funding source.
+
+    Portal / source link.
+
+    Field / research area.
+
+    Stage.
+
+    Date sourced.
+
+    Deadline.
+
+    Date applied.
+
+    Interview date.
+
+    Outcome date.
+
+    Offer status.
+
+    Notes.
+
+    Priority score.
+
+    Fit score.
+
+    Status reason.
+
+    Next action.
+
+    Next action date.
+
+2) Documents Checklist
+
+For each application, track whether the following are required, uploaded, verified, and sent:
+
+    CV.
+
+    Motivation letter / research statement.
+
+    Transcripts.
+
+    Degree certificates.
+
+    References / recommendation letters.
+
+    English proficiency certificate.
+
+    Passport copy.
+
+    Research proposal, if needed.
+
+    Writing sample, if needed.
+
+    Portfolio / GitHub / publications, if relevant.
+
+    Any country-specific certificates.
+
+For each document, store:
+
+    Required?
+
+    Uploaded?
+
+    Verified?
+
+    Sent?
+
+    Sent date?
+
+    Version number.
+
+    File name.
+
+    Notes.
+
+3) Outreach Log
+
+Track every professor or lab contact with:
+
+    Contact ID.
+
+    Application ID linked to the role.
+
+    Professor / PI name.
+
+    Institution.
+
+    Email address or contact method.
+
+    Date first contacted.
+
+    Subject line.
+
+    Message summary.
+
+    Full thread status.
+
+    Follow-up count.
+
+    Last follow-up date.
+
+    Next follow-up date.
+
+    Response received?
+
+    Response summary.
+
+    Outcome.
+
+    Tone / relationship quality.
+
+    Attachments sent.
+
+4) Reminder System
+
+For each application, support:
+
+    Deadline reminders.
+
+    Interview reminders.
+
+    Follow-up reminders.
+
+    Document upload reminders.
+
+    Recommendation letter reminders.
+
+Each reminder should include:
+
+    Reminder ID.
+
+    Linked application or outreach item.
+
+    Reminder type.
+
+    Due date.
+
+    Priority.
+
+    Delivery channel.
+
+    Status.
+
+    Snooze / completed state.
+
+Analytics Requirements
+
+Create analytics that summarize the pipeline and show:
+
+    Total applications.
+
+    Applications by stage.
+
+    Applications by country.
+
+    Applications by program / field.
+
+    Submitted count.
+
+    Shortlisted count.
+
+    Interview count.
+
+    Offer count.
+
+    Rejection count.
+
+    Acceptance count.
+
+    Conversion rates between stages:
+
+        Sourced → Applied.
+
+        Applied → Shortlisted.
+
+        Shortlisted → Interview.
+
+        Interview → Offer.
+
+        Offer → Accepted.
+
+Also produce:
+
+    Conversion rates by country.
+
+    Conversion rates by program.
+
+    Average time from application to interview.
+
+    Average time from interview to offer.
+
+    Average time from source to submission.
+
+    Monthly application volume.
+
+    Pending deadlines within 7, 14, and 30 days.
+
+    Outstanding document completion rate.
+
+    Outreach response rate.
+
+    Follow-up effectiveness rate.
+
+Dashboards
+
+Create views or reports for:
+
+    Pipeline overview.
+
+    Country comparison.
+
+    Program comparison.
+
+    Deadline risk.
+
+    Outstanding documents.
+
+    Outreach status.
+
+    Interview preparation queue.
+
+    Offer comparison.
+
+Scoring Logic
+
+Add scoring so I can rank opportunities by:
+
+    Research fit.
+
+    Funding quality.
+
+    Country preference.
+
+    Supervisor match.
+
+    Deadline urgency.
+
+    Likelihood of success.
+
+    Application effort required.
+
+Use a 0–100 score and let me filter by:
+
+    Best fit.
+
+    Highest urgency.
+
+    Best funding.
+
+    Best probability of interview.
+
+Application Intelligence
+
+Include fields or logic to capture:
+
+    Why this program fits my background.
+
+    Why this supervisor fits my interests.
+
+    Which recent papers I should read.
+
+    Which skills match the job description.
+
+    Missing requirements.
+
+    Risks in the application.
+
+    Suggested outreach angle.
+
+Automation Rules
+
+Implement these behaviors:
+
+    When a deadline is within 14 days, mark the application as urgent.
+
+    When an application is submitted, start follow-up tracking.
+
+    When a professor replies, update outreach status automatically.
+
+    When a document is missing, add a reminder.
+
+    When an interview is scheduled, generate interview prep tasks.
+
+    When an offer is received, trigger an offer comparison checklist.
+
+    When no response is received after a follow-up window, schedule the next follow-up.
+
+Notification Rules
+
+Send both:
+
+    In-app notifications.
+
+    Email reminders.
+
+Support notification templates for:
+
+    Upcoming deadline.
+
+    Missing documents.
+
+    New professor reply.
+
+    Interview scheduled.
+
+    Follow-up due.
+
+    Offer received.
+
+Views and Filters
+
+Allow filtering by:
+
+    Country.
+
+    University.
+
+    Field.
+
+    Supervisor.
+
+    Stage.
+
+    Deadline range.
+
+    Funding source.
+
+    Priority score.
+
+    Interview status.
+
+    Offer status.
+
+Required Outputs
+
+Generate:
+
+    A database/schema design.
+
+    A spreadsheet-friendly table layout.
+
+    Analytics formulas or SQL queries.
+
+    A dashboard specification.
+
+    Reminder logic.
+
+    Outreach workflow.
+
+    A reusable template for each new PhD application.
+
+    A reusable professor-contact template.
+
+    A reusable interview-preparation template.
+
+    A reusable decision log for offers.
+
+Operating Rules
+
+    Optimize for fully funded PhD positions in Europe.
+
+    Treat each PhD vacancy like a research job application.
+
+    Assume I may apply to many programs across countries.
+
+    Prefer a system that is easy to maintain in Notion, Airtable, Obsidian, Google Sheets, or a custom web app.
+
+    Make the tracker scalable for dozens or hundreds of applications.
+
+Final Deliverable
+
+Return:
+
+    A recommended structure for the tracker.
+
+    The exact fields for each table.
+
+    Suggested status values.
+
+    Analytics definitions.
+
+    Reminder schedule.
+
+    Outreach cadence.
+
+    A simple implementation plan for a no-code tool or spreadsheet.
+
+    A version suitable for a custom app if possible.
+
+Suggested Tracker Structure
+
+Applications Table
+
+    Application ID.
+
+    University.
+
+    Country.
+
+    Program.
+
+    Project title.
+
+    Supervisor.
+
+    Funding source.
+
+    Deadline.
+
+    Stage.
+
+    Priority.
+
+    Fit score.
+
+    Date sourced.
+
+    Date applied.
+
+    Interview date.
+
+    Offer status.
+
+    Outcome.
+
+    Next action.
+
+    Notes.
+
+Documents Table
+
+    Application ID.
+
+    Document type.
+
+    Required.
+
+    Uploaded.
+
+    Verified.
+
+    Sent.
+
+    File link.
+
+    Version.
+
+    Deadline.
+
+    Notes.
+
+Outreach Table
+
+    Application ID.
+
+    Contact name.
+
+    Institution.
+
+    Role.
+
+    Email.
+
+    Date contacted.
+
+    Follow-up date.
+
+    Response status.
+
+    Outcome.
+
+    Notes.
+
+Reminders Table
+
+    Linked item.
+
+    Type.
+
+    Due date.
+
+    Channel.
+
+    Status.
+
+    Priority.
+
+Analytics View
+
+    Stage counts.
+
+    Conversion rates.
+
+    Country funnel.
+
+    Program funnel.
+
+    Deadline risk.
+
+    Document completion.
+
+    Outreach response rate.
+
+Recommended Workflow
+
+    Add new PhD leads from EURAXESS, AcademicTransfer, university pages, and other job boards. EURAXESS and AcademicTransfer are both active sources of PhD vacancies.
+
+    Score each lead for fit, funding, and urgency.
+
+    Track missing documents before applying.
+
+    Record professor emails and follow-up dates.
+
+    Move the application through stages from sourced to accepted.
+
+    Review weekly pipeline metrics and upcoming deadlines.
+
+Practical Note
+
+For your use case in software engineering, a tracker like this works especially well in Airtable or a lightweight custom app because it can handle relational data, reminders, and dashboards cleanly. If you are using a spreadsheet, keep applications, documents, outreach, and reminders in separate tabs and link them by Application ID.
+
+Would you like me to turn this into a ready-to-use Airtable schema, a Google Sheets template, or a Notion database setup?
+
+Below is a categorized reference table of the most useful websites for finding fully funded PhD positions in Europe. I've organized them by purpose so you can bookmark them and build a systematic search routine.
+
+CategoryWebsitePurpose
+
+Europe-wide Jobs
+
+EURAXESS
+
+EU-funded PhD, Postdoc & Research Jobs
+
+Europe-wide Jobs
+
+Academic Positions
+
+PhD & Research Jobs across Europe
+
+Europe-wide Jobs
+
+Nature Careers
+
+International Academic Jobs
+
+Europe-wide Jobs
+
+ResearchGate Jobs
+
+Research Openings
+
+Europe-wide Jobs
+
+FindAPhD
+
+UK & European PhD Database
+
+Europe-wide Jobs
+
+jobs.ac.uk
+
+UK Academic Jobs
+
+Europe-wide Funding
+
+Horizon Europe
+
+EU Research Projects
+
+Europe-wide Funding
+
+Marie Skłodowska-Curie Actions (MSCA)
+
+Prestigious EU Fellowships
+
+Europe-wide Funding
+
+European Research Council (ERC)
+
+ERC-funded Projects
+
+Europe-wide Funding
+
+CORDIS
+
+EU Project Database
+
+Europe-wide Institutes
+
+EMBL Careers
+
+European Molecular Biology Laboratory
+
+Europe-wide Institutes
+
+CERN Careers
+
+Physics & Engineering PhDs
+
+Europe-wide Institutes
+
+EIT
+
+European Institute of Innovation & Technology
+
+🇩🇪 Germany
+
+WebsitePurpose
+
+DAAD
+
+Scholarships & PhDs
+
+Academics.de
+
+Academic Jobs
+
+Max Planck Society Careers
+
+Research Institutes
+
+Helmholtz Association Careers
+
+National Research Centers
+
+Fraunhofer Careers
+
+Applied Research
+
+Leibniz Association Careers
+
+Research Institutes
+
+DFG
+
+German Research Foundation
+
+TU Munich Jobs
+
+University Jobs
+
+LMU Munich Careers
+
+University Jobs
+
+RWTH Aachen Careers
+
+Engineering PhDs
+
+Heidelberg University Jobs
+
+Life Sciences
+
+TU Dresden Careers
+
+Engineering
+
+University of Freiburg Jobs
+
+Multiple Fields
+
+University of Bonn Jobs
+
+Science & Humanities
+
+🇳🇱 Netherlands
+
+WebsitePurpose
+
+AcademicTransfer
+
+Main Dutch Academic Portal
+
+TU Delft Careers
+
+Engineering
+
+Eindhoven University of Technology
+
+Engineering
+
+Wageningen University
+
+Agriculture & Life Sciences
+
+University of Amsterdam
+
+Multiple Fields
+
+Vrije Universiteit Amsterdam
+
+Research Jobs
+
+Leiden University
+
+Science
+
+Utrecht University
+
+Research Positions
+
+Radboud University
+
+Research
+
+Maastricht University
+
+Medical & Health
+
+🇸🇪 Sweden
+
+WebsitePurpose
+
+Academic Positions Sweden
+
+National Jobs
+
+KTH Royal Institute of Technology
+
+Engineering
+
+Lund University
+
+Research Jobs
+
+Uppsala University
+
+PhDs
+
+Chalmers University
+
+Engineering
+
+Stockholm University
+
+Research
+
+Karolinska Institute
+
+Medical Research
+
+Linköping University
+
+Technology
+
+Umeå University
+
+Multiple Fields
+
+Swedish University of Agricultural Sciences
+
+Agriculture
+
+🇫🇮 Finland
+
+WebsitePurpose
+
+University of Helsinki
+
+PhD Jobs
+
+Aalto University
+
+Engineering
+
+Tampere University
+
+Research
+
+University of Turku
+
+Science
+
+LUT University
+
+Engineering
+
+University of Oulu
+
+Technology
+
+🇩🇰 Denmark
+
+WebsitePurpose
+
+University of Copenhagen
+
+PhDs
+
+DTU Careers
+
+Engineering
+
+Aarhus University
+
+Research
+
+Aalborg University
+
+Engineering
+
+SDU Careers
+
+Multiple Fields
+
+🇧🇪 Belgium
+
+WebsitePurpose
+
+KU Leuven Jobs
+
+One of Europe's Best
+
+Ghent University
+
+Research
+
+University of Antwerp
+
+PhD Jobs
+
+Vrije Universiteit Brussel
+
+Research
+
+Université Catholique de Louvain
+
+Science
+
+🇫🇷 France
+
+WebsitePurpose
+
+Campus France
+
+National Portal
+
+CNRS Careers
+
+National Research
+
+INRIA
+
+Computer Science
+
+INSERM
+
+Medical Research
+
+PSL University
+
+Research
+
+Sorbonne University
+
+Science
+
+Grenoble Alpes University
+
+Engineering
+
+École Polytechnique
+
+Engineering
+
+🇮🇹 Italy
+
+WebsitePurpose
+
+University of Bologna
+
+PhD Calls
+
+Politecnico di Milano
+
+Engineering
+
+Sapienza University Rome
+
+Research
+
+University of Padua
+
+Science
+
+University of Pisa
+
+Research
+
+Politecnico di Torino
+
+Engineering
+
+University of Milan
+
+Science
+
+🇪🇸 Spain
+
+WebsitePurpose
+
+CSIC
+
+National Research Council
+
+Barcelona Supercomputing Center
+
+HPC
+
+Universitat de Barcelona
+
+Research
+
+Autonomous University of Barcelona
+
+Science
+
+Polytechnic University of Catalonia
+
+Engineering
+
+University of Valencia
+
+Research
+
+Complutense University Madrid
+
+Science
+
+🇨🇭 Switzerland
+
+WebsitePurpose
+
+ETH Zurich Careers
+
+World's Top Engineering School
+
+EPFL Jobs
+
+Engineering
+
+University of Zurich
+
+Research
+
+University of Basel
+
+Life Sciences
+
+University of Geneva
+
+Physics & Biology
+
+Swiss National Science Foundation
+
+Funding
+
+🇦🇹 Austria
+
+WebsitePurpose
+
+University of Vienna
+
+Research
+
+TU Wien
+
+Engineering
+
+ISTA
+
+Institute of Science & Technology Austria
+
+Medical University of Vienna
+
+Medicine
+
+🇳🇴 Norway
+
+WebsitePurpose
+
+Jobbnorge
+
+National Academic Jobs
+
+NTNU Careers
+
+Engineering
+
+University of Oslo
+
+Research
+
+University of Bergen
+
+Science
+
+UiT Arctic University
+
+Research
+
+🇮🇪 Ireland
+
+WebsitePurpose
+
+Trinity College Dublin
+
+PhDs
+
+University College Dublin
+
+Research
+
+University of Galway
+
+Science
+
+Tyndall National Institute
+
+Engineering
+
+Science Foundation Ireland
+
+Funding
+
+🇵🇹 Portugal
+
+WebsitePurpose
+
+FCT Portugal
+
+National Funding
+
+University of Porto
+
+Research
+
+University of Lisbon
+
+PhD Positions
+
+NOVA University Lisbon
+
+Science
+
+🇵🇱 Poland
+
+WebsitePurpose
+
+NAWA
+
+Scholarships
+
+University of Warsaw
+
+Research
+
+Jagiellonian University
+
+Science
+
+Warsaw University of Technology
+
+Engineering
+
+🇨🇿 Czech Republic
+
+WebsitePurpose
+
+Charles University
+
+PhDs
+
+Czech Technical University
+
+Engineering
+
+Masaryk University
+
+Research
+
+🇭🇺 Hungary
+
+WebsitePurpose
+
+Stipendium Hungaricum
+
+Scholarships
+
+ELTE University
+
+Research
+
+Budapest University of Technology
+
+Engineering
+
+🇱🇺 Luxembourg
+
+WebsitePurpose
+
+University of Luxembourg
+
+PhD Positions
+
+Luxembourg Institute of Science & Technology
+
+Research
+
+🇪🇪 Estonia
+
+WebsitePurpose
+
+University of Tartu
+
+Research
+
+TalTech
+
+Engineering
+
+🇱🇻 Latvia
+
+WebsitePurpose
+
+University of Latvia
+
+Research
+
+Riga Technical University
+
+Engineering
+
+🇱🇹 Lithuania
+
+WebsitePurpose
+
+Vilnius University
+
+Research
+
+Kaunas University of Technology
+
+Engineering
+
+Top European Research Institutes (Highly Recommended)
+
+InstituteCountryFocus
+
+CERN
+
+Switzerland
+
+Physics
+
+EMBL
+
+Germany
+
+Biology
+
+Max Planck Institutes
+
+Germany
+
+All Sciences
+
+Helmholtz Association
+
+Germany
+
+Engineering & Science
+
+Fraunhofer Society
+
+Germany
+
+Applied Research
+
+Leibniz Association
+
+Germany
+
+Interdisciplinary Research
+
+CNRS
+
+France
+
+All Sciences
+
+INRIA
+
+France
+
+AI & Computer Science
+
+INSERM
+
+France
+
+Medical Research
+
+IMEC
+
+Belgium
+
+Electronics & Semiconductors
+
+VIB
+
+Belgium
+
+Biotechnology
+
+ISTA
+
+Austria
+
+Basic Sciences
+
+Barcelona Supercomputing Center
+
+Spain
+
+HPC & AI
+
+Tyndall National Institute
+
+Ireland
+
+Electronics
+
+⭐ Essential Websites to Check Weekly
+
+If you only have time to monitor a few sources regularly, prioritize these:
+
+PriorityWebsiteWhy It Matters
+
+⭐⭐⭐⭐⭐
+
+EURAXESS
+
+Covers nearly all EU-funded PhD positions.
+
+⭐⭐⭐⭐⭐
+
+Academic Positions
+
+Thousands of openings across Europe.
+
+⭐⭐⭐⭐⭐
+
+AcademicTransfer
+
+Best source for Dutch universities.
+
+⭐⭐⭐⭐⭐
+
+FindAPhD
+
+UK plus many European projects.
+
+⭐⭐⭐⭐
+
+jobs.ac.uk
+
+UK academic vacancies.
+
+⭐⭐⭐⭐
+
+DAAD
+
+Germany-specific opportunities and scholarships.
+
+⭐⭐⭐⭐
+
+Max Planck Careers
+
+High-quality, fully funded research positions.
+
+⭐⭐⭐⭐
+
+Helmholtz Careers
+
+Large national research centers.
+
+⭐⭐⭐⭐
+
+Marie Skłodowska-Curie Actions (MSCA)
+
+Prestigious, fully funded doctoral networks.
+
+⭐⭐⭐⭐
+
+Horizon Europe / CORDIS
+
+EU-funded collaborative research projects.
+
+These resources cover the majority of advertised, fully funded PhD opportunities in Europe across STEM, social sciences, humanities, and interdisciplinary research.
+
+should sutably have  info to
+
+Yes — this reference table is a good starting point for tracking fully funded PhD opportunities in Europe, but it should be trimmed into a more practical system so you can search, compare, and apply consistently. The strongest core sources are EURAXESS, Academic Positions, AcademicTransfer, FindAPhD, jobs.ac.uk, DAAD, MSCA, Horizon Europe/CORDIS, and major university career pages.
+
+What it already covers well
+
+    Europe-wide job portals: good for broad discovery across many countries and fields.
+
+    Country-specific portals: useful for narrowing the search once you know your target countries.
+
+    Research institutes: very important because many fully funded PhDs are posted as job vacancies rather than admission calls.
+
+    Funding sources: MSCA, ERC, Horizon Europe, and national agencies are essential because many PhDs are tied to grants.
+
+What it should have
+
+To be truly useful for your application pipeline, the table should also include these columns:
+
+Field	Why it matters
+
+Website	The source to monitor
+
+Category	Europe-wide, country-specific, institute, or funding
+
+Country	Helps you segment by target region
+
+Best for	Example: engineering, life sciences, AI, humanities
+
+Update frequency	Daily, weekly, or monthly
+
+Application type	Vacancy, fellowship, doctoral call, project role
+
+Funding type	Salary, stipend, scholarship, tuition waiver
+
+Notes	Any portal-specific quirks
+
+Best way to use it
+
+A better workflow is:
+
+    Keep 5–10 primary sites you check weekly.
+
+    Use country portals only when targeting a specific region.
+
+    Track every result in your application database with fields like country, program, deadline, supervisor, stage, and funding source.
+
+    Treat institute career pages as high-value targets because many PhDs are advertised there first.
+
+Recommended shortlist
+
+If you want the most efficient setup, prioritize these:
+
+    EURAXESS.
+
+    Academic Positions.
+
+    AcademicTransfer.
+
+    FindAPhD.
+
+    jobs.ac.uk.
+
+    DAAD.
+
+    MSCA jobs.
+
+    CORDIS / Horizon Europe.
+
+    Max Planck, Helmholtz, CNRS, EMBL, CERN, and similar institute pages.
+
+Cleaned conclusion
+
+So yes, your table is suitable, but it becomes much stronger if you add metadata that helps you actually track and compare openings, not just collect links. The best next step is to turn it into a searchable tracker with columns for source, country, funding type, deadline, fit score, stage, and outreach status.
+
+Monitoring Sources
+
+Maintain a curated watchlist of the most useful websites for fully funded PhD positions in Europe. Organize sources by:
+
+    Europe-wide jobs.
+
+    Europe-wide funding.
+
+    Europe-wide institutes.
+
+    Country-specific portals.
+
+    Top research institutes.
+
+    Weekly priority sites.
+
+For each source, store:
+
+    Website name.
+
+    Category.
+
+    Country or region.
+
+    Purpose.
+
+    Priority level.
+
+    Search frequency.
+
+    Notes on funding type or discipline coverage.
+
+Why it belongs in the prompt
+
+This makes the tracker do more than store applications. It also becomes a lead-generation system that tells you where to look every week, which sources are most valuable, and how to avoid wasting time on low-signal portals. It is especially useful because many funded PhDs in Europe are posted as jobs on university and institute pages rather than centralized admissions portals.
+
+Best prompt addition
+
+You can paste this directly into your master prompt:
+
+Source Watchlist and Search Routine
+
+Build and maintain a structured watchlist of trusted websites for fully funded PhD positions in Europe. Include Europe-wide portals, funding databases, research institute career pages, and country-specific university job boards. For each source, track website name, category, country, purpose, priority, and search frequency.
+
+Prioritize weekly monitoring of:
+
+    EURAXESS.
+
+    Academic Positions.
+
+    AcademicTransfer.
+
+    FindAPhD.
+
+    jobs.ac.uk.
+
+    DAAD.
+
+    MSCA.
+
+    Horizon Europe / CORDIS.
+
+    Major institute career pages such as Max Planck, Helmholtz, CNRS, EMBL, CERN, INRIA, and similar.
+
+For each PhD lead discovered from these sources, automatically capture:
+
+    Source website.
+
+    Source category.
+
+    Country.
+
+    University or institute.
+
+    Program or project title.
+
+    Funding type.
+
+    Deadline.
+
+    Supervisor.
+
+    Stage.
+
+    Fit score.
+
+    Next action.
+
+Recommendation
+
+Yes, include the table, but do not keep it only as a raw reference list. Convert it into a source registry inside your application system so each website has a purpose, priority, and monitoring cadence.
+
+A good final prompt structure is:
+
+    Source watchlist.
+
+    Lead capture.
+
+    Application tracking.
+
+    Outreach log.
+
+    Document checklist.
+
+    Reminder system.
+
+    Analytics dashboard.
