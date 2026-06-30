@@ -25,7 +25,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ArrowLeft, CheckSquare, Square, ExternalLink, Edit, Plus, AlertTriangle } from "lucide-react";
+import { ArrowLeft, CheckSquare, Square, ExternalLink, Edit, Plus, AlertTriangle, CalendarPlus } from "lucide-react";
+import { downloadICS } from "@/lib/ics";
 
 const STAGES = [
   "sourced", "interested", "applied",
@@ -356,22 +357,54 @@ export default function ApplicationDetail() {
             </Card>
           </div>
 
-          {/* Quick reminder button */}
+          {/* Quick actions: deadline */}
           {app.deadline && (
             <Card className="border-dashed">
-              <CardContent className="pt-4 pb-4 flex items-center justify-between">
+              <CardContent className="pt-4 pb-4 flex items-center justify-between gap-2 flex-wrap">
                 <div className="text-sm"><span className="font-medium">Deadline:</span> <span className="text-muted-foreground">{app.deadline}</span></div>
-                <Button size="sm" variant="outline" onClick={() => {
-                  createReminderMutation.mutate({
-                    data: {
-                      applicationId: appId,
-                      reminderType: "deadline",
-                      dueDate: app.deadline!,
-                      priority: "high",
-                    },
-                  });
-                }}>
-                  <Plus className="w-3.5 h-3.5 mr-1.5" /> Add deadline reminder
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() =>
+                    downloadICS({
+                      summary: `PhD Deadline: ${app.university}`,
+                      description: `Application deadline for ${app.program ?? app.projectTitle ?? "PhD"} at ${app.university}, ${app.country}.`,
+                      dateStr: app.deadline!,
+                      allDay: true,
+                    }, `deadline-${app.university.replace(/\s+/g, "-")}`)
+                  }>
+                    <CalendarPlus className="w-3.5 h-3.5 mr-1.5" /> Export to Calendar
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => {
+                    createReminderMutation.mutate({
+                      data: {
+                        applicationId: appId,
+                        reminderType: "deadline",
+                        dueDate: app.deadline!,
+                        priority: "high",
+                      },
+                    });
+                  }}>
+                    <Plus className="w-3.5 h-3.5 mr-1.5" /> Add reminder
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Quick actions: interview */}
+          {app.interviewDate && (
+            <Card className="border-dashed border-amber-200 bg-amber-50/40">
+              <CardContent className="pt-4 pb-4 flex items-center justify-between gap-2 flex-wrap">
+                <div className="text-sm"><span className="font-medium">Interview:</span> <span className="text-muted-foreground">{app.interviewDate}</span></div>
+                <Button size="sm" variant="outline" onClick={() =>
+                  downloadICS({
+                    summary: `PhD Interview: ${app.university}`,
+                    description: `Interview for ${app.program ?? app.projectTitle ?? "PhD"} at ${app.university}, ${app.country}.`,
+                    dateStr: app.interviewDate!,
+                    allDay: false,
+                    durationHours: 1,
+                  }, `interview-${app.university.replace(/\s+/g, "-")}`)
+                }>
+                  <CalendarPlus className="w-3.5 h-3.5 mr-1.5" /> Export to Calendar
                 </Button>
               </CardContent>
             </Card>

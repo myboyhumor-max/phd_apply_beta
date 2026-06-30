@@ -16,7 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Bell, CheckCircle2, Clock, AlertTriangle, Trash2 } from "lucide-react";
+import { Plus, Bell, CheckCircle2, Clock, AlertTriangle, Trash2, CalendarPlus } from "lucide-react";
+import { downloadICS } from "@/lib/ics";
 
 const REMINDER_TYPES = [
   { value: "deadline", label: "Deadline" },
@@ -162,6 +163,22 @@ export default function Reminders() {
               </div>
             </div>
             <div className="flex gap-1 shrink-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                title="Export to Calendar (.ics)"
+                onClick={() =>
+                  downloadICS({
+                    summary: `PhD Reminder: ${typeLabel}`,
+                    description: r.notes ?? undefined,
+                    dateStr: r.dueDate,
+                    allDay: true,
+                  }, `reminder-${r.reminderType}-${r.dueDate}`)
+                }
+              >
+                <CalendarPlus className="w-3.5 h-3.5" />
+              </Button>
               {!r.isCompleted && (
                 <>
                   <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-700" onClick={() => handleComplete(r.id)}>
