@@ -16,9 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ExternalLink, Trash2, AlertTriangle, List, Kanban, ChevronDown } from "lucide-react";
+import { Plus, ExternalLink, Trash2, AlertTriangle, List, Kanban } from "lucide-react";
 import { KanbanBoardContent } from "@/pages/kanban";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const STAGES = [
   "sourced", "interested", "applied",
@@ -138,196 +137,191 @@ export default function Applications() {
   }
 
   return (
-    <div className="p-6 max-w-7xl space-y-4">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+    <div className="p-6 max-w-7xl mx-auto space-y-5">
+
+      {/* ── Header ───────────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Applications</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {filtered.length} application{filtered.length !== 1 ? "s" : ""}
+          <p className="text-sm text-muted-foreground mt-0.5">
+            {(applications ?? []).length} total
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {/* View dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                {view === "list" ? <List className="w-3.5 h-3.5" /> : <Kanban className="w-3.5 h-3.5" />}
-                {view === "list" ? "List" : "Kanban"}
-                <ChevronDown className="w-3 h-3 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setView("list")} className="gap-2">
-                <List className="w-4 h-4" /> List view
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setView("kanban")} className="gap-2">
-                <Kanban className="w-4 h-4" /> Kanban board
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Segmented view toggle */}
+          <div className="flex items-center border border-border rounded-lg bg-muted/40 p-0.5 gap-0.5">
+            <button
+              onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                view === "list"
+                  ? "bg-white shadow-sm text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+              List
+            </button>
+            <button
+              onClick={() => setView("kanban")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                view === "kanban"
+                  ? "bg-white shadow-sm text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Kanban className="w-3.5 h-3.5" />
+              Kanban
+            </button>
+          </div>
 
           <Button onClick={() => setShowCreate(true)}>
-            <Plus className="w-4 h-4 mr-2" /> Add Application
+            <Plus className="w-4 h-4 mr-1.5" /> Add Application
           </Button>
         </div>
       </div>
 
-      {/* Kanban view */}
-      {view === "kanban" && (
-        <div className="pt-2">
-          <p className="text-xs text-muted-foreground mb-4">Drag cards between columns to move applications through stages</p>
-          <KanbanBoardContent />
-        </div>
-      )}
+      {/* ── KANBAN VIEW ──────────────────────────────────────── */}
+      {view === "kanban" && <KanbanBoardContent />}
 
-      {/* List view: filters + table */}
+      {/* ── LIST VIEW ────────────────────────────────────────── */}
       {view === "list" && (
         <>
-          <div className="flex flex-wrap gap-3">
+          {/* Filters */}
+          <div className="flex flex-wrap items-center gap-2">
             <Input
-              placeholder="Search university, project, supervisor..."
+              placeholder="Search university, project, supervisor…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="max-w-xs"
+              className="max-w-[280px]"
             />
             <Select value={stageFilter || "_all"} onValueChange={(v) => setStageFilter(v === "_all" ? "" : v)}>
-              <SelectTrigger className="w-44">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="All stages" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="_all">All stages</SelectItem>
-                {STAGES.map((s) => (
-                  <SelectItem key={s} value={s}>{STAGE_LABELS[s]}</SelectItem>
-                ))}
+                {STAGES.map((s) => <SelectItem key={s} value={s}>{STAGE_LABELS[s]}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={countryFilter || "_all"} onValueChange={(v) => setCountryFilter(v === "_all" ? "" : v)}>
-              <SelectTrigger className="w-44">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="All countries" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="_all">All countries</SelectItem>
-                {EUROPEAN_COUNTRIES.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
+                {EUROPEAN_COUNTRIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             {(stageFilter || countryFilter || search) && (
-              <Button variant="ghost" onClick={() => { setStageFilter(""); setCountryFilter(""); setSearch(""); }}>
-                Clear filters
+              <Button variant="ghost" size="sm" onClick={() => { setStageFilter(""); setCountryFilter(""); setSearch(""); }}>
+                Clear
               </Button>
             )}
+            {!isLoading && (
+              <span className="ml-auto text-xs text-muted-foreground">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</span>
+            )}
           </div>
-        </>
-      )}
 
-      {/* Table (list view only) */}
-      {view === "list" && isLoading ? (
-        <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-lg" />)}
-        </div>
-      ) : filtered.length === 0 ? (
-        <Card>
-          <CardContent className="py-16 text-center">
-            <p className="text-muted-foreground">No applications found</p>
-            <Button className="mt-4" onClick={() => setShowCreate(true)}>Add your first application</Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50 border-b">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">University / Project</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Country</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stage</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Deadline</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Score</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Next Action</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {filtered.map((app) => {
-                const days = app.deadline ? daysUntil(app.deadline) : null;
-                const deadlineColor =
-                  days !== null && days <= 7 ? "text-red-600 font-semibold" :
-                  days !== null && days <= 14 ? "text-amber-600 font-semibold" :
-                  "text-muted-foreground";
-                return (
-                  <tr key={app.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        {app.isUrgent && <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
-                        <div>
-                          <Link href={`/applications/${app.id}`} className="font-medium hover:text-primary">
-                            {app.university}
-                          </Link>
-                          {app.projectTitle && (
-                            <div className="text-xs text-muted-foreground truncate max-w-xs">{app.projectTitle}</div>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{app.country}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${STAGE_COLORS[app.stage] ?? ""}`}>
-                        {STAGE_LABELS[app.stage] ?? app.stage}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      {app.deadline ? (
-                        <div>
-                          <div className={`text-xs ${deadlineColor}`}>
-                            {days === 0 ? "Today" : days === 1 ? "Tomorrow" : days !== null && days < 0 ? "Overdue" : `${days}d`}
-                          </div>
-                          <div className="text-xs text-muted-foreground">{app.deadline}</div>
-                        </div>
-                      ) : <span className="text-muted-foreground">—</span>}
-                    </td>
-                    <td className="px-4 py-3">
-                      {app.fitScore != null ? (
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div className="h-full bg-primary rounded-full" style={{ width: `${app.fitScore}%` }} />
-                          </div>
-                          <span className="text-xs font-medium">{app.fitScore}</span>
-                        </div>
-                      ) : <span className="text-muted-foreground">—</span>}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="text-xs text-muted-foreground truncate max-w-[200px]">
-                        {app.nextAction ?? "—"}
-                      </div>
-                      {app.nextActionDate && (
-                        <div className="text-xs text-muted-foreground">{app.nextActionDate}</div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <Link href={`/applications/${app.id}`}>
-                          <Button variant="ghost" size="sm">View</Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => {
-                            if (confirm("Delete this application?")) {
-                              deleteMutation.mutate({ id: app.id });
-                            }
-                          }}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </td>
+          {/* Table */}
+          {isLoading ? (
+            <div className="space-y-2">
+              {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-xl" />)}
+            </div>
+          ) : filtered.length === 0 ? (
+            <Card className="border-dashed">
+              <CardContent className="py-16 text-center">
+                <p className="text-muted-foreground text-sm">No applications match your filters</p>
+                <Button className="mt-4" onClick={() => setShowCreate(true)}>Add your first application</Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="rounded-xl border border-border overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-muted/40 border-b border-border">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">University / Project</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">Country</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">Stage</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">Deadline</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">Score</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">Next Action</th>
+                    <th className="px-4 py-3 w-20" />
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filtered.map((app) => {
+                    const days = app.deadline ? daysUntil(app.deadline) : null;
+                    const deadlineColor =
+                      days !== null && days < 0 ? "text-red-600 font-semibold" :
+                      days !== null && days <= 7 ? "text-red-500 font-semibold" :
+                      days !== null && days <= 14 ? "text-amber-600 font-semibold" :
+                      "text-muted-foreground";
+                    return (
+                      <tr key={app.id} className="hover:bg-muted/20 transition-colors group">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            {app.isUrgent && <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+                            <div>
+                              <Link href={`/applications/${app.id}`} className="font-medium hover:text-primary transition-colors">
+                                {app.university}
+                              </Link>
+                              {(app.projectTitle ?? app.program) && (
+                                <div className="text-xs text-muted-foreground truncate max-w-xs mt-0.5">
+                                  {app.projectTitle ?? app.program}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">{app.country}</td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${STAGE_COLORS[app.stage] ?? "bg-gray-100 text-gray-600 border-gray-200"}`}>
+                            {STAGE_LABELS[app.stage] ?? app.stage}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          {app.deadline ? (
+                            <div>
+                              <div className={`text-xs font-medium ${deadlineColor}`}>
+                                {days === 0 ? "Today" : days === 1 ? "Tomorrow" : days !== null && days < 0 ? `${Math.abs(days)}d overdue` : `${days}d`}
+                              </div>
+                              <div className="text-xs text-muted-foreground">{app.deadline}</div>
+                            </div>
+                          ) : <span className="text-muted-foreground text-sm">—</span>}
+                        </td>
+                        <td className="px-4 py-3">
+                          {app.fitScore != null ? (
+                            <div className="flex items-center gap-2">
+                              <div className="w-14 h-1.5 bg-muted rounded-full overflow-hidden">
+                                <div className="h-full bg-primary rounded-full" style={{ width: `${app.fitScore}%` }} />
+                              </div>
+                              <span className="text-xs font-medium tabular-nums">{app.fitScore}</span>
+                            </div>
+                          ) : <span className="text-muted-foreground text-sm">—</span>}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="text-xs text-muted-foreground truncate max-w-[180px]">{app.nextAction ?? "—"}</div>
+                          {app.nextActionDate && <div className="text-xs text-muted-foreground mt-0.5">{app.nextActionDate}</div>}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Link href={`/applications/${app.id}`}>
+                              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">View</Button>
+                            </Link>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                              onClick={() => { if (confirm("Delete this application?")) deleteMutation.mutate({ id: app.id }); }}>
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
       )}
 
       {/* Create Dialog */}
