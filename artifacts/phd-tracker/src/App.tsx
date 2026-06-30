@@ -2,7 +2,7 @@ import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { LayoutDashboard, FileText, Users, Bell, BarChart2, GraduationCap } from "lucide-react";
+import { LayoutDashboard, FileText, Users, Bell, BarChart2, GraduationCap, Kanban } from "lucide-react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Applications from "@/pages/applications";
@@ -10,6 +10,7 @@ import ApplicationDetail from "@/pages/application-detail";
 import Outreach from "@/pages/outreach";
 import Reminders from "@/pages/reminders";
 import Analytics from "@/pages/analytics";
+import KanbanBoard from "@/pages/kanban";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +26,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/applications", label: "Applications", icon: FileText },
+    { href: "/kanban", label: "Kanban", icon: Kanban },
     { href: "/outreach", label: "Outreach", icon: Users },
     { href: "/reminders", label: "Reminders", icon: Bell },
     { href: "/analytics", label: "Analytics", icon: BarChart2 },
@@ -80,6 +82,7 @@ function Router() {
         <Route path="/" component={Dashboard} />
         <Route path="/applications" component={Applications} />
         <Route path="/applications/:id" component={ApplicationDetail} />
+        <Route path="/kanban" component={KanbanBoard} />
         <Route path="/outreach" component={Outreach} />
         <Route path="/reminders" component={Reminders} />
         <Route path="/analytics" component={Analytics} />
