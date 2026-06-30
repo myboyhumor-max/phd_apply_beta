@@ -7,7 +7,6 @@ import {
   getListApplicationsQueryKey,
   type Application,
 } from "@workspace/api-client-react";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExternalLink, AlertTriangle, CalendarDays } from "lucide-react";
 
@@ -72,7 +71,7 @@ function ApplicationCard({ app }: { app: Application }) {
     <div
       draggable
       onDragStart={handleDragStart}
-      className="bg-white border border-border rounded-lg p-3 shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow select-none group"
+      className="bg-white border border-border rounded-xl p-3 shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md transition-all select-none group"
     >
       <div className="flex items-start justify-between gap-1 mb-1">
         <p className="text-xs font-semibold text-foreground leading-snug line-clamp-2 flex-1">
@@ -92,7 +91,7 @@ function ApplicationCard({ app }: { app: Application }) {
       </p>
 
       <div className="flex items-center justify-between gap-1 flex-wrap">
-        <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-medium">
+        <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md font-medium">
           {app.country}
         </span>
 
@@ -161,12 +160,12 @@ function KanbanColumn({
   }
 
   return (
-    <div className="flex flex-col min-w-[220px] w-[220px] shrink-0">
+    <div className="flex flex-col min-w-[210px] w-[210px] shrink-0">
       <div
-        className={`rounded-t-lg border px-3 py-2 mb-2 flex items-center justify-between ${STAGE_HEADER[stage]}`}
+        className={`rounded-xl border px-3 py-2 mb-2 flex items-center justify-between ${STAGE_HEADER[stage]}`}
       >
         <span className="text-xs font-semibold">{STAGE_LABELS[stage]}</span>
-        <span className="text-xs font-bold tabular-nums">{apps.length}</span>
+        <span className="text-xs font-bold tabular-nums bg-white/60 px-1.5 py-0.5 rounded-full">{apps.length}</span>
       </div>
 
       <div
@@ -174,10 +173,8 @@ function KanbanColumn({
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`flex-1 min-h-[120px] rounded-lg border-2 border-dashed border-transparent p-1.5 space-y-2 transition-all duration-150 ${
-          isDragOver
-            ? STAGE_DROP_ACTIVE[stage]
-            : "hover:border-border"
+        className={`flex-1 min-h-[120px] rounded-xl border-2 border-dashed border-transparent p-1.5 space-y-2 transition-all duration-150 ${
+          isDragOver ? STAGE_DROP_ACTIVE[stage] : "hover:border-border/50"
         }`}
       >
         {apps.map((app) => (
@@ -185,7 +182,7 @@ function KanbanColumn({
         ))}
 
         {apps.length === 0 && !isDragOver && (
-          <div className="h-20 flex items-center justify-center text-[11px] text-muted-foreground/50 italic">
+          <div className="h-16 flex items-center justify-center text-[11px] text-muted-foreground/40 italic">
             Drop here
           </div>
         )}
@@ -194,7 +191,7 @@ function KanbanColumn({
   );
 }
 
-export default function Kanban() {
+export function KanbanBoardContent() {
   const queryClient = useQueryClient();
   const { data: applications, isLoading } = useListApplications();
   const updateMutation = useUpdateApplication();
@@ -220,41 +217,46 @@ export default function Kanban() {
   const byStage = (stage: Stage): Application[] =>
     (applications ?? []).filter((a) => a.stage === stage);
 
+  if (isLoading) {
+    return (
+      <div className="flex gap-4 mt-4">
+        {STAGES.map((s) => (
+          <div key={s} className="min-w-[210px]">
+            <Skeleton className="h-9 w-full rounded-xl mb-2" />
+            <div className="space-y-2">
+              <Skeleton className="h-20 w-full rounded-xl" />
+              <Skeleton className="h-20 w-full rounded-xl" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-screen">
-      <div className="px-6 py-4 border-b border-border shrink-0">
-        <h1 className="text-xl font-bold text-foreground">Kanban Board</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
+    <div className="flex gap-3 pb-4 overflow-x-auto">
+      {STAGES.map((stage) => (
+        <KanbanColumn
+          key={stage}
+          stage={stage}
+          apps={byStage(stage)}
+          onDrop={handleDrop}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function Kanban() {
+  return (
+    <div className="p-6 space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Kanban Board</h1>
+        <p className="text-sm text-muted-foreground mt-1">
           Drag cards between stages to update their status
         </p>
       </div>
-
-      <div className="flex-1 overflow-x-auto px-6 py-4">
-        {isLoading ? (
-          <div className="flex gap-4">
-            {STAGES.map((s) => (
-              <div key={s} className="min-w-[220px]">
-                <Skeleton className="h-9 w-full rounded-lg mb-2" />
-                <div className="space-y-2">
-                  <Skeleton className="h-20 w-full rounded-lg" />
-                  <Skeleton className="h-20 w-full rounded-lg" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex gap-4 h-full pb-4">
-            {STAGES.map((stage) => (
-              <KanbanColumn
-                key={stage}
-                stage={stage}
-                apps={byStage(stage)}
-                onDrop={handleDrop}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <KanbanBoardContent />
     </div>
   );
 }

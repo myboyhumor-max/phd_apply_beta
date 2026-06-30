@@ -16,7 +16,9 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ExternalLink, Trash2, AlertTriangle } from "lucide-react";
+import { Plus, ExternalLink, Trash2, AlertTriangle, List, Kanban, ChevronDown } from "lucide-react";
+import { KanbanBoardContent } from "@/pages/kanban";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const STAGES = [
   "sourced", "interested", "applied",
@@ -59,6 +61,7 @@ function daysUntil(dateStr: string): number {
 export default function Applications() {
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
+  const [view, setView] = useState<"list" | "kanban">("list");
   const [stageFilter, setStageFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [search, setSearch] = useState("");
@@ -136,55 +139,90 @@ export default function Applications() {
 
   return (
     <div className="p-6 max-w-7xl space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Applications</h1>
-          <p className="text-muted-foreground text-sm mt-1">{filtered.length} application{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="text-muted-foreground text-sm mt-1">
+            {filtered.length} application{filtered.length !== 1 ? "s" : ""}
+          </p>
         </div>
-        <Button onClick={() => setShowCreate(true)}>
-          <Plus className="w-4 h-4 mr-2" /> Add Application
-        </Button>
-      </div>
+        <div className="flex items-center gap-2">
+          {/* View dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1.5">
+                {view === "list" ? <List className="w-3.5 h-3.5" /> : <Kanban className="w-3.5 h-3.5" />}
+                {view === "list" ? "List" : "Kanban"}
+                <ChevronDown className="w-3 h-3 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setView("list")} className="gap-2">
+                <List className="w-4 h-4" /> List view
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setView("kanban")} className="gap-2">
+                <Kanban className="w-4 h-4" /> Kanban board
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <Input
-          placeholder="Search university, project, supervisor..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-xs"
-        />
-        <Select value={stageFilter || "_all"} onValueChange={(v) => setStageFilter(v === "_all" ? "" : v)}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="All stages" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">All stages</SelectItem>
-            {STAGES.map((s) => (
-              <SelectItem key={s} value={s}>{STAGE_LABELS[s]}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={countryFilter || "_all"} onValueChange={(v) => setCountryFilter(v === "_all" ? "" : v)}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="All countries" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">All countries</SelectItem>
-            {EUROPEAN_COUNTRIES.map((c) => (
-              <SelectItem key={c} value={c}>{c}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {(stageFilter || countryFilter || search) && (
-          <Button variant="ghost" onClick={() => { setStageFilter(""); setCountryFilter(""); setSearch(""); }}>
-            Clear filters
+          <Button onClick={() => setShowCreate(true)}>
+            <Plus className="w-4 h-4 mr-2" /> Add Application
           </Button>
-        )}
+        </div>
       </div>
 
-      {/* Table */}
-      {isLoading ? (
+      {/* Kanban view */}
+      {view === "kanban" && (
+        <div className="pt-2">
+          <p className="text-xs text-muted-foreground mb-4">Drag cards between columns to move applications through stages</p>
+          <KanbanBoardContent />
+        </div>
+      )}
+
+      {/* List view: filters + table */}
+      {view === "list" && (
+        <>
+          <div className="flex flex-wrap gap-3">
+            <Input
+              placeholder="Search university, project, supervisor..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="max-w-xs"
+            />
+            <Select value={stageFilter || "_all"} onValueChange={(v) => setStageFilter(v === "_all" ? "" : v)}>
+              <SelectTrigger className="w-44">
+                <SelectValue placeholder="All stages" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="_all">All stages</SelectItem>
+                {STAGES.map((s) => (
+                  <SelectItem key={s} value={s}>{STAGE_LABELS[s]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={countryFilter || "_all"} onValueChange={(v) => setCountryFilter(v === "_all" ? "" : v)}>
+              <SelectTrigger className="w-44">
+                <SelectValue placeholder="All countries" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="_all">All countries</SelectItem>
+                {EUROPEAN_COUNTRIES.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {(stageFilter || countryFilter || search) && (
+              <Button variant="ghost" onClick={() => { setStageFilter(""); setCountryFilter(""); setSearch(""); }}>
+                Clear filters
+              </Button>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Table (list view only) */}
+      {view === "list" && isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-lg" />)}
         </div>

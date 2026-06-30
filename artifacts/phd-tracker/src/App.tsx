@@ -2,7 +2,7 @@ import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { LayoutDashboard, FileText, Users, Bell, BarChart2, GraduationCap, Kanban } from "lucide-react";
+import { LayoutDashboard, FileText, Users, Bell, BarChart2, GraduationCap } from "lucide-react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Applications from "@/pages/applications";
@@ -21,74 +21,78 @@ const queryClient = new QueryClient({
   },
 });
 
-function Layout({ children }: { children: React.ReactNode }) {
+const navItems = [
+  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/applications", label: "Applications", icon: FileText },
+  { href: "/outreach", label: "Outreach", icon: Users },
+  { href: "/reminders", label: "Reminders", icon: Bell },
+  { href: "/analytics", label: "Analytics", icon: BarChart2 },
+];
+
+function FloatingNav() {
   const [location] = useLocation();
-  const navItems = [
-    { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/applications", label: "Applications", icon: FileText },
-    { href: "/kanban", label: "Kanban", icon: Kanban },
-    { href: "/outreach", label: "Outreach", icon: Users },
-    { href: "/reminders", label: "Reminders", icon: Bell },
-    { href: "/analytics", label: "Analytics", icon: BarChart2 },
-  ];
 
   return (
-    <div className="flex min-h-screen w-full bg-background text-foreground">
-      {/* Sidebar */}
-      <div className="w-56 border-r border-border bg-sidebar flex flex-col shrink-0">
-        <div className="p-4 border-b border-sidebar-border">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-primary" />
-            <span className="font-bold text-base tracking-tight text-sidebar-foreground">PhD Tracker</span>
+    <header className="fixed top-3 left-3 right-3 z-50">
+      <div className="bg-white/80 backdrop-blur-lg border border-white/60 rounded-2xl shadow-xl shadow-black/5 px-4 py-2.5 flex items-center justify-between gap-4">
+        {/* Brand */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+            <GraduationCap className="w-4 h-4 text-white" />
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">Europe Application Hub</p>
-        </div>
-        <nav className="flex-1 p-3 space-y-0.5">
+          <div className="hidden sm:block">
+            <span className="font-bold text-sm tracking-tight leading-none">PhD Tracker</span>
+            <p className="text-[10px] text-muted-foreground leading-none mt-0.5">Europe Hub</p>
+          </div>
+        </Link>
+
+        {/* Nav links */}
+        <nav className="flex items-center gap-0.5 flex-1 justify-center">
           {navItems.map((item) => {
-            const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+            const isActive =
+              location === item.href ||
+              (item.href !== "/" && location.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
                 }`}
               >
-                <item.icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
+                <item.icon className="w-3.5 h-3.5 shrink-0" />
+                <span className="hidden md:inline">{item.label}</span>
               </Link>
             );
           })}
         </nav>
-        <div className="p-3 border-t border-sidebar-border">
-          <p className="text-xs text-muted-foreground">Track every step of your European PhD journey</p>
-        </div>
-      </div>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        {children}
-      </main>
-    </div>
+        {/* Right spacer (mirrors brand width for centering) */}
+        <div className="hidden sm:block w-[110px] shrink-0" />
+      </div>
+    </header>
   );
 }
 
 function Router() {
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/applications" component={Applications} />
-        <Route path="/applications/:id" component={ApplicationDetail} />
-        <Route path="/kanban" component={KanbanBoard} />
-        <Route path="/outreach" component={Outreach} />
-        <Route path="/reminders" component={Reminders} />
-        <Route path="/analytics" component={Analytics} />
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>
+    <>
+      <FloatingNav />
+      <main className="pt-20 min-h-screen bg-background">
+        <Switch>
+          <Route path="/" component={Dashboard} />
+          <Route path="/applications" component={Applications} />
+          <Route path="/applications/:id" component={ApplicationDetail} />
+          <Route path="/kanban" component={KanbanBoard} />
+          <Route path="/outreach" component={Outreach} />
+          <Route path="/reminders" component={Reminders} />
+          <Route path="/analytics" component={Analytics} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+    </>
   );
 }
 
