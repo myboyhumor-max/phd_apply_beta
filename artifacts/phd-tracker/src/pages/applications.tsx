@@ -19,30 +19,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus, ExternalLink, Trash2, AlertTriangle } from "lucide-react";
 
 const STAGES = [
-  "sourced", "interested", "shortlisted", "applied", "under_review",
-  "interview_scheduled", "interview_completed", "offer_received",
-  "rejected", "withdrawn", "accepted",
+  "sourced", "interested", "applied",
+  "interview_scheduled", "offer_received",
+  "rejected", "withdrawn",
 ];
 
 const STAGE_LABELS: Record<string, string> = {
-  sourced: "Sourced", interested: "Interested", shortlisted: "Shortlisted",
-  applied: "Applied", under_review: "Under Review", interview_scheduled: "Interview Scheduled",
-  interview_completed: "Interview Completed", offer_received: "Offer Received",
-  rejected: "Rejected", withdrawn: "Withdrawn", accepted: "Accepted",
+  sourced: "Sourced",
+  interested: "Interested",
+  applied: "Applied",
+  interview_scheduled: "Interview Scheduled",
+  offer_received: "Offer Received",
+  rejected: "Rejected",
+  withdrawn: "Withdrawn",
 };
 
 const STAGE_COLORS: Record<string, string> = {
   sourced: "bg-slate-100 text-slate-700 border-slate-200",
   interested: "bg-blue-100 text-blue-700 border-blue-200",
-  shortlisted: "bg-indigo-100 text-indigo-700 border-indigo-200",
   applied: "bg-violet-100 text-violet-700 border-violet-200",
-  under_review: "bg-purple-100 text-purple-700 border-purple-200",
   interview_scheduled: "bg-amber-100 text-amber-700 border-amber-200",
-  interview_completed: "bg-orange-100 text-orange-700 border-orange-200",
   offer_received: "bg-green-100 text-green-700 border-green-200",
   rejected: "bg-red-100 text-red-600 border-red-200",
   withdrawn: "bg-gray-100 text-gray-500 border-gray-200",
-  accepted: "bg-emerald-100 text-emerald-800 border-emerald-200",
 };
 
 const EUROPEAN_COUNTRIES = [

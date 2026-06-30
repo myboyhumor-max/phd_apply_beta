@@ -25,15 +25,13 @@ router.get("/analytics/summary", async (req, res): Promise<void> => {
   const total = applications.length;
   const sourced = total;
   const applied = applications.filter((a) =>
-    ["applied", "under_review", "interview_scheduled", "interview_completed", "offer_received", "accepted"].includes(a.stage)
+    ["applied", "interview_scheduled", "offer_received"].includes(a.stage)
   ).length;
   const interviewed = applications.filter((a) =>
-    ["interview_scheduled", "interview_completed", "offer_received", "accepted"].includes(a.stage)
+    ["interview_scheduled", "offer_received"].includes(a.stage)
   ).length;
-  const offered = applications.filter((a) =>
-    ["offer_received", "accepted"].includes(a.stage)
-  ).length;
-  const accepted = applications.filter((a) => a.stage === "accepted").length;
+  const offered = applications.filter((a) => a.stage === "offer_received").length;
+  const accepted = 0;
   const rejected = applications.filter((a) => a.stage === "rejected").length;
 
   const todayStr = today();
@@ -42,7 +40,7 @@ router.get("/analytics/summary", async (req, res): Promise<void> => {
   const in30 = addDays(30);
 
   const activeApps = applications.filter(
-    (a) => !["rejected", "withdrawn", "accepted"].includes(a.stage)
+    (a) => !["rejected", "withdrawn"].includes(a.stage)
   );
 
   const deadlineIn7 = activeApps.filter(
@@ -80,7 +78,7 @@ router.get("/analytics/summary", async (req, res): Promise<void> => {
     sourcedToApplied: sourced > 0 ? applied / sourced : 0,
     appliedToInterview: applied > 0 ? interviewed / applied : 0,
     interviewToOffer: interviewed > 0 ? offered / interviewed : 0,
-    offerToAccepted: offered > 0 ? accepted / offered : 0,
+    offerToAccepted: 0,
   };
 
   res.json({
@@ -95,7 +93,7 @@ router.get("/analytics/summary", async (req, res): Promise<void> => {
     documentCompletionRate,
     interviewCount: interviewed,
     offerCount: offered,
-    acceptedCount: accepted,
+    acceptedCount: 0,
     rejectedCount: rejected,
   });
 });
@@ -110,13 +108,13 @@ router.get("/analytics/by-country", async (req, res): Promise<void> => {
       map[app.country] = { count: 0, applied: 0, interviews: 0, offers: 0 };
     }
     map[app.country].count++;
-    if (["applied", "under_review", "interview_scheduled", "interview_completed", "offer_received", "accepted"].includes(app.stage)) {
+    if (["applied", "interview_scheduled", "offer_received"].includes(app.stage)) {
       map[app.country].applied++;
     }
-    if (["interview_scheduled", "interview_completed", "offer_received", "accepted"].includes(app.stage)) {
+    if (["interview_scheduled", "offer_received"].includes(app.stage)) {
       map[app.country].interviews++;
     }
-    if (["offer_received", "accepted"].includes(app.stage)) {
+    if (app.stage === "offer_received") {
       map[app.country].offers++;
     }
   }
@@ -132,9 +130,9 @@ router.get("/analytics/by-stage", async (req, res): Promise<void> => {
   const applications = await db.select().from(applicationsTable);
 
   const stageOrder = [
-    "sourced", "interested", "shortlisted", "applied", "under_review",
-    "interview_scheduled", "interview_completed", "offer_received",
-    "rejected", "withdrawn", "accepted",
+    "sourced", "interested", "applied",
+    "interview_scheduled", "offer_received",
+    "rejected", "withdrawn",
   ];
 
   const map: Record<string, number> = {};
@@ -161,7 +159,7 @@ router.get("/analytics/upcoming-deadlines", async (req, res): Promise<void> => {
         a.deadline &&
         a.deadline >= todayStr &&
         a.deadline <= in30 &&
-        !["rejected", "withdrawn", "accepted"].includes(a.stage)
+        !["rejected", "withdrawn"].includes(a.stage)
     )
     .sort((a, b) => {
       if (!a.deadline) return 1;

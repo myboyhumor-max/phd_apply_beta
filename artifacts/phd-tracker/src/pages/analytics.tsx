@@ -8,17 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const STAGE_COLORS: Record<string, string> = {
-  sourced: "#94a3b8", interested: "#60a5fa", shortlisted: "#818cf8",
-  applied: "#a78bfa", under_review: "#c084fc", interview_scheduled: "#f59e0b",
-  interview_completed: "#f97316", offer_received: "#22c55e",
-  rejected: "#ef4444", withdrawn: "#9ca3af", accepted: "#10b981",
+  sourced: "#94a3b8", interested: "#60a5fa",
+  applied: "#a78bfa", interview_scheduled: "#f59e0b",
+  offer_received: "#22c55e", rejected: "#ef4444", withdrawn: "#9ca3af",
 };
 
 const STAGE_LABELS: Record<string, string> = {
-  sourced: "Sourced", interested: "Interested", shortlisted: "Shortlisted",
-  applied: "Applied", under_review: "Under Review", interview_scheduled: "Interview Scheduled",
-  interview_completed: "Interview Completed", offer_received: "Offer Received",
-  rejected: "Rejected", withdrawn: "Withdrawn", accepted: "Accepted",
+  sourced: "Sourced", interested: "Interested",
+  applied: "Applied", interview_scheduled: "Interview Scheduled",
+  offer_received: "Offer Received",
+  rejected: "Rejected", withdrawn: "Withdrawn",
 };
 
 function pct(n: number) { return `${Math.round(n * 100)}%`; }

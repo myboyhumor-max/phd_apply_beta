@@ -47,7 +47,8 @@ router.get("/applications", async (req, res): Promise<void> => {
     ...app,
     isUrgent:
       app.isUrgent ||
-      (app.deadline != null && app.deadline >= today && app.deadline <= in14Days),
+      (!["rejected", "withdrawn"].includes(app.stage) &&
+        app.deadline != null && app.deadline >= today && app.deadline <= in14Days),
   }));
 
   res.json(result);

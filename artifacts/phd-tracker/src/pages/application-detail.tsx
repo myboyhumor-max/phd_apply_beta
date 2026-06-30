@@ -28,23 +28,20 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ArrowLeft, CheckSquare, Square, ExternalLink, Edit, Plus, AlertTriangle } from "lucide-react";
 
 const STAGES = [
-  "sourced", "interested", "shortlisted", "applied", "under_review",
-  "interview_scheduled", "interview_completed", "offer_received",
-  "rejected", "withdrawn", "accepted",
+  "sourced", "interested", "applied",
+  "interview_scheduled", "offer_received",
+  "rejected", "withdrawn",
 ];
 const STAGE_LABELS: Record<string, string> = {
-  sourced: "Sourced", interested: "Interested", shortlisted: "Shortlisted",
-  applied: "Applied", under_review: "Under Review", interview_scheduled: "Interview Scheduled",
-  interview_completed: "Interview Completed", offer_received: "Offer Received",
-  rejected: "Rejected", withdrawn: "Withdrawn", accepted: "Accepted",
+  sourced: "Sourced", interested: "Interested",
+  applied: "Applied", interview_scheduled: "Interview Scheduled",
+  offer_received: "Offer Received", rejected: "Rejected", withdrawn: "Withdrawn",
 };
 const STAGE_COLORS: Record<string, string> = {
   sourced: "bg-slate-100 text-slate-700", interested: "bg-blue-100 text-blue-700",
-  shortlisted: "bg-indigo-100 text-indigo-700", applied: "bg-violet-100 text-violet-700",
-  under_review: "bg-purple-100 text-purple-700", interview_scheduled: "bg-amber-100 text-amber-700",
-  interview_completed: "bg-orange-100 text-orange-700", offer_received: "bg-green-100 text-green-700",
+  applied: "bg-violet-100 text-violet-700", interview_scheduled: "bg-amber-100 text-amber-700",
+  offer_received: "bg-green-100 text-green-700",
   rejected: "bg-red-100 text-red-600", withdrawn: "bg-gray-100 text-gray-500",
-  accepted: "bg-emerald-100 text-emerald-800",
 };
 
 const DEFAULT_DOCS = [
